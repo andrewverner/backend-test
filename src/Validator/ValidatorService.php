@@ -6,7 +6,7 @@ namespace App\Validator;
 
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-final class ValidatorService
+class ValidatorService
 {
     private array $errors = [];
 

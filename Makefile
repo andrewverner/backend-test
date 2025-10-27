@@ -1,10 +1,7 @@
+init: up db
 up:
 	docker compose -f .docker/docker-compose.yml up -d --build
-cs:
-	vendor/bin/phpcs --standard=.phpcs.xml.dist
-cbf:
-	vendor/bin/phpcbf
-psalm:
-	- vendor/bin/psalm
-unit:
-	vendor/bin/phpunit --testdox --colors=always
+db:
+	docker exec test_php composer db:reset
+phpunit:
+	docker exec test_php php vendor/bin/phpunit

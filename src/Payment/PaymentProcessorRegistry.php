@@ -6,7 +6,7 @@ namespace App\Payment;
 
 use App\Enum\PaymentProcessorsEnum;
 
-final readonly class PaymentProcessorRegistry
+readonly class PaymentProcessorRegistry
 {
     /**
      * @param iterable<PaymentProcessorAdapterInterface> $processors
