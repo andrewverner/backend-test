@@ -14,15 +14,12 @@ class PurchaseRequest
         #[Assert\NotBlank]
         #[Assert\Type('integer')]
         public int $product,
-
         #[Assert\NotBlank]
         #[Assert\Type('string')]
         #[AppAssert\TaxNumber]
         public string $taxNumber,
-
         #[Assert\NotNull]
         public PaymentProcessorsEnum $paymentProcessor,
-
         #[Assert\Type('string')]
         public ?string $couponCode = null,
     ) {

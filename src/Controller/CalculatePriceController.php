@@ -26,7 +26,6 @@ final readonly class CalculatePriceController
     )]
     public function __invoke(Request $request): JsonResponse
     {
-        /** @var CalculatePriceRequest $dto */
         $dto = $this->serializer->deserialize(
             data: $request->getContent(),
             type: CalculatePriceRequest::class,
