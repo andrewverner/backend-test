@@ -26,7 +26,7 @@ Content-Type: application/json
 {
   "product": 2,
   "taxNumber": "DE123",
-  "couponCode": "P10"
+  "couponCode": "P60"
 }
 
 ### Error: unknown coupon
