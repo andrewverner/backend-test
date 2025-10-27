@@ -11,3 +11,5 @@ compose.override.yaml
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+.docker/log/access.log
+.docker/log/error.log
