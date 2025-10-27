@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
+use App\Exception\ApplicationExceptionInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -21,6 +22,15 @@ final readonly class JsonApiExceptionSubscriber implements EventSubscriberInterf
     public function onKernelException(ExceptionEvent $event): void
     {
         $exception = $event->getThrowable();
+
+        if ($exception instanceof ApplicationExceptionInterface) {
+            $event->setResponse(new JsonResponse(
+                data: ['errors' => $exception->getErrors()],
+                status: $exception->getStatus(),
+            ));
+
+            return;
+        }
 
         $responseData = $this->formatException($exception);
         $status = $responseData['errors'][0]['status'] ?? 500;

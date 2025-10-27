@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Validator\Constraint;
 
+use App\Enum\CountriesCodeEnum;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -16,10 +17,10 @@ class TaxNumberValidator extends ConstraintValidator
         }
 
         $patterns = [
-            'DE' => '/^DE\d{9}$/',
-            'IT' => '/^IT\d{11}$/',
-            'GR' => '/^GR\d{9}$/',
-            'FR' => '/^FR[A-Za-z]{2}\d{9}$/'
+            CountriesCodeEnum::DE->value => '/^DE\d{9}$/',
+            CountriesCodeEnum::IT->value => '/^IT\d{11}$/',
+            CountriesCodeEnum::GR->value => '/^GR\d{9}$/',
+            CountriesCodeEnum::FR->value => '/^FR[A-Za-z]{2}\d{9}$/'
         ];
 
         foreach ($patterns as $regex) {

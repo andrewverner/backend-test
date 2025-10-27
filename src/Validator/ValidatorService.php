@@ -17,11 +17,11 @@ final class ValidatorService
 
     public function validate(object $dto): bool
     {
+        $this->errors = [];
+
         $violations = $this->validator->validate(value: $dto);
 
         if (count($violations) > 0) {
-            $this->errors = [];
-
             foreach ($violations as $violation) {
                 $field = $violation->getPropertyPath() ?: 'body';
                 $this->errors[$field][] = $violation->getMessage();
