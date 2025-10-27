@@ -13,3 +13,7 @@ compose.override.yaml
 ###< symfony/framework-bundle ###
 .docker/log/access.log
 .docker/log/error.log
+###> phpunit/phpunit ###
+/phpunit.xml
+/.phpunit.cache/
+###< phpunit/phpunit ###
