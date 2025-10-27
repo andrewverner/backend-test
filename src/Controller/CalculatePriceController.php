@@ -5,19 +5,24 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Dto\CalculatePriceRequest;
+use App\Enum\CountriesCodeEnum;
+use App\Repository\CouponRepository;
 use App\Repository\ProductRepository;
+use App\Service\PriceCalculator;
+use App\Validator\ValidatorService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final readonly class CalculatePriceController
 {
     public function __construct(
         private SerializerInterface $serializer,
-        private ValidatorInterface $validator,
+        private ValidatorService $validator,
         private ProductRepository $productRepository,
+        private CouponRepository $couponRepository,
+        private PriceCalculator $priceCalculator,
     ) {
     }
 
@@ -28,23 +33,15 @@ final readonly class CalculatePriceController
     )]
     public function __invoke(Request $request): JsonResponse
     {
+        /** @var CalculatePriceRequest $dto */
         $dto = $this->serializer->deserialize(
             data: $request->getContent(),
             type: CalculatePriceRequest::class,
             format: 'json',
         );
 
-        $violations = $this->validator->validate(value: $dto);
-
-        if (count($violations) > 0) {
-            $errors = [];
-
-            foreach ($violations as $violation) {
-                $field = $violation->getPropertyPath() ?: 'body';
-                $errors[$field][] = $violation->getMessage();
-            }
-
-            return new JsonResponse(data: ['errors' => $errors], status: 422);
+        if (!$this->validator->validate($dto)) {
+            return new JsonResponse(data: ['errors' => $this->validator->getErrors()], status: 422);
         }
 
         $product = $this->productRepository->find(id: $dto->product);
@@ -53,6 +50,18 @@ final readonly class CalculatePriceController
             return new JsonResponse(data: ['errors' => ['product' => ['Not found']]], status: 422);
         }
 
-        return new JsonResponse(data: []);
+        $coupon = $this->couponRepository->findOneBy(['code' => $dto->couponCode]);
+
+        if ($dto->couponCode && !$coupon) {
+            return new JsonResponse(data: ['errors' => ['coupon' => ['Not found']]], status: 422);
+        }
+
+        $price = $this->priceCalculator->calculate(
+            price: $product->getPrice(),
+            countryCode: CountriesCodeEnum::from(substr($dto->taxNumber, 0, 2)),
+            coupon: $coupon,
+        );
+
+        return new JsonResponse(data: ['price' => $price], status: 200);
     }
 }
