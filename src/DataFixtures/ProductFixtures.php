@@ -13,18 +13,9 @@ class ProductFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $products = [
-            [
-                'name' => 'IPhone',
-                'price' => 170_000,
-            ],
-            [
-                'name' => 'Headphones',
-                'price' => 10_000,
-            ],
-            [
-                'name' => 'Case',
-                'price' => 3500,
-            ],
+            ['name' => 'IPhone', 'price' => 170_000],
+            ['name' => 'Headphones', 'price' => 10_000],
+            ['name' => 'Case', 'price' => 3500],
         ];
 
         foreach ($products as $product) {
