@@ -1,22 +1,41 @@
-### Calculate Price
+### OK: calculate DE + P25
 POST http://127.0.0.1:8337/calculate-price
-Accept: application/json
 Content-Type: application/json
 
 {
   "product": 1,
   "taxNumber": "DE123456789",
-  "couponCode": "D15"
+  "couponCode": "P25"
 }
 
-### Execute Purchase
+### OK: purchase GR + F15K via paypal
 POST http://127.0.0.1:8337/purchase
-Accept: application/json
 Content-Type: application/json
 
 {
   "product": 1,
-  "taxNumber": "IT12345678900",
-  "couponCode": "D15",
+  "taxNumber": "GR123456789",
+  "couponCode": "F15K",
   "paymentProcessor": "paypal"
+}
+
+### Error: bad tax format
+POST http://127.0.0.1:8337/calculate-price
+Content-Type: application/json
+
+{
+  "product": 2,
+  "taxNumber": "DE123",
+  "couponCode": "P10"
+}
+
+### Error: unknown coupon
+POST http://127.0.0.1:8337/purchase
+Content-Type: application/json
+
+{
+  "product": 3,
+  "taxNumber": "FRAB123456789",
+  "couponCode": "P50",
+  "paymentProcessor": "stripe"
 }
